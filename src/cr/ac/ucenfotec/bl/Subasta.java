@@ -1,6 +1,7 @@
 package cr.ac.ucenfotec.bl;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Subasta {
 
@@ -12,8 +13,8 @@ public class Subasta {
     private String estado;
     private Oferta oferta;
 
-    // Constructor por defecto
-    public Subasta() {
+    // Constructores
+    public Subasta(){
         this.nombreArticulo = "";
         this.descripcion = "";
         this.precioInicial = 0.0;
@@ -23,90 +24,92 @@ public class Subasta {
         this.oferta = null;
     }
 
-    // Constructor completo
     public Subasta(String nombreArticulo, String descripcion, double precioInicial,
-                   LocalDate fechaCreacion, LocalDate fechaCierre, String estado, Oferta oferta) {
+                   LocalDate fechaCreacion, LocalDate fechaCierre, String estado){
+
         this.nombreArticulo = nombreArticulo;
         this.descripcion = descripcion;
         this.precioInicial = precioInicial;
         this.fechaCreacion = fechaCreacion;
         this.fechaCierre = fechaCierre;
         this.estado = estado;
-        this.oferta = oferta;
     }
 
     // Getters
-    public String getNombreArticulo() {
+    public String getNombreArticulo(){
         return nombreArticulo;
     }
 
-    public String getDescripcion() {
+    public String getDescripcion(){
         return descripcion;
     }
 
-    public double getPrecioInicial() {
+    public double getPrecioInicial(){
         return precioInicial;
     }
 
-    public LocalDate getFechaCreacion() {
+    public LocalDate getFechaCreacion(){
         return fechaCreacion;
     }
 
-    public LocalDate getFechaCierre() {
+    public LocalDate getFechaCierre(){
         return fechaCierre;
     }
 
-    public String getEstado() {
+    public String getEstado(){
         return estado;
     }
 
-    public Oferta getOferta() {
+    public Oferta getOferta(){
         return oferta;
     }
 
     // Setters
-    public void setNombreArticulo(String nombreArticulo) {
+    public void setNombreArticulo(String nombreArticulo){
         this.nombreArticulo = nombreArticulo;
     }
 
-    public void setDescripcion(String descripcion) {
+    public void setDescripcion(String descripcion){
         this.descripcion = descripcion;
     }
 
-    public void setPrecioInicial(double precioInicial) {
+    public void setPrecioInicial(double precioInicial){
         this.precioInicial = precioInicial;
     }
 
-    public void setFechaCreacion(LocalDate fechaCreacion) {
+    public void setFechaCreacion(LocalDate fechaCreacion){
         this.fechaCreacion = fechaCreacion;
     }
 
-    public void setFechaCierre(LocalDate fechaCierre) {
+    public void setFechaCierre(LocalDate fechaCierre){
         this.fechaCierre = fechaCierre;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(String estado){
         this.estado = estado;
     }
 
-    public void setOferta(Oferta oferta) {
+    public void setOferta(Oferta oferta){
         this.oferta = oferta;
     }
 
     @Override
-    public String toString() {
-        String resultado = "\n SUBASTA " +
-                "\nNombre del articulo: " + nombreArticulo +
-                "\nDescripcion: " + descripcion +
-                "\nPrecio inicial: " + precioInicial +
-                "\nFecha de creacion: " + fechaCreacion +
-                "\nFecha de cierre: " + fechaCierre +
-                "\nEstado: " + estado;
+    public String toString(){
 
-        if (oferta != null) {
-            resultado += "\nOferta registrada: " + oferta.toString();
-        } else {
-            resultado += "\nOferta registrada: Ninguna";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        String resultado = "\n--SUBASTA--";
+        resultado += "\nNombre del articulo: " + nombreArticulo;
+        resultado += "\nDescripcion: " + descripcion;
+        resultado += "\nPrecio inicial: " + precioInicial;
+        resultado += "\nFecha creacion: " + fechaCreacion.format(formatter);
+        resultado += "\nFecha cierre: " + fechaCierre.format(formatter);
+        resultado += "\nEstado: " + estado;
+
+        if(oferta != null){
+            resultado += oferta.toString();
+        }else{
+            resultado += "\nOferta actual: Ninguna";
         }
 
         return resultado;
