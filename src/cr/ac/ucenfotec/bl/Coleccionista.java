@@ -43,6 +43,7 @@ public class Coleccionista extends Usuario{
     }
 
     //Getters
+    @Override
     public double getPuntuacion(){
         return puntuacion;
     }

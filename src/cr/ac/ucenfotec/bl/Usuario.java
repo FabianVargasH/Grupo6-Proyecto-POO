@@ -38,6 +38,11 @@ public abstract class Usuario{
     //Metodo abstracto que deben implementar las clases hijas (Los diferentes tipos de usuarios)
     public abstract String getTipoUsuario();
 
+    //Metodo para la puntuacion del vendedor y el coleccionista
+    public double getPuntuacion() {
+        return 0;
+    }
+
     //Getters
     public String getNombreCompleto(){
         return nombreCompleto;
