@@ -12,6 +12,7 @@ public class Subasta {
     private LocalDate fechaCierre;
     private String estado;
     private ArrayList<Oferta> oferta;
+    private ArrayList<Objetos> objetos;
 
     // Constructores
     public Subasta() {
@@ -44,6 +45,11 @@ public class Subasta {
         this.oferta.add(oferta);
     }
 
+    //Metodo para agregar un objeto a la subasta
+    public void agregarObjeto(Objetos objeto) {
+        this.objetos.add(objeto);
+    }
+
     // Getters
     public Usuario getCreador() {
         return creador;
@@ -69,6 +75,9 @@ public class Subasta {
         return new ArrayList<>(oferta);
     }
 
+    public ArrayList<Objetos> getObjetos() {
+        return new ArrayList<>(objetos);
+    }
     // Setters
     public void setCreador(Usuario creador) {
         this.creador = creador;
@@ -105,7 +114,14 @@ public class Subasta {
         resultado += "\nFecha creacion: " + fechaCreacion.format(formatter);
         resultado += "\nFecha cierre: " + fechaCierre.format(formatter);
         resultado += "\nEstado: " + estado;
-
+        if (objetos.isEmpty()) {
+            resultado += "\nObjetos: Ninguno";
+        } else {
+            resultado += "\nObjetos:";
+            for (Objetos objeto : objetos) {
+                resultado += "\n  - " + objeto.getNombre();
+            }
+        }
         if (oferta.isEmpty()) {
             resultado += "\nOfertas: Ninguna";
         } else {

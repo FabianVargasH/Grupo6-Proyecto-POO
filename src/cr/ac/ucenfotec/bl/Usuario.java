@@ -3,11 +3,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public abstract class Usuario{
-    private String nombreCompleto;
-    private String identificacion;
-    private LocalDate fechaNacimiento;
-    private String contrasena;
-    private String correoElectronico;
+    protected String nombreCompleto;
+    protected String identificacion;
+    protected LocalDate fechaNacimiento;
+    protected String contrasena;
+    protected String correoElectronico;
 
     //Constructor por defecto
     public Usuario(){}

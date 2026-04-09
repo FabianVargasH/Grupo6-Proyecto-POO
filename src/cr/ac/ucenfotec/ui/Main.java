@@ -6,7 +6,8 @@ public class Main {
     public static void main(String[] args) throws Exception {
         ArrayList<Usuario> usuarios = new ArrayList<>();
         ArrayList<Subasta> subastas = new ArrayList<>();
+        ArrayList<OrdenAdjudicacion> ordenes = new ArrayList<>();
         Menu menu = new Menu();
-        menu.mostrarMenu(usuarios, subastas);
+        menu.mostrarMenu(usuarios, subastas,ordenes);
     }
 }
