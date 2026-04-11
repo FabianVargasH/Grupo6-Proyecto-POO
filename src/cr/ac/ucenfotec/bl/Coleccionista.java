@@ -6,7 +6,7 @@ public class Coleccionista extends Usuario{
     private double puntuacion;
     private String direccion;
     private ArrayList<String> intereses;
-    private ArrayList<String> objetosPropiedad; //Para este primer avance sera un String, despues sera ArrayList<Objeto>
+    private ArrayList<Objetos> objetosPropiedad;
 
     //Constructor por defecto
     public Coleccionista(){
@@ -34,11 +34,11 @@ public class Coleccionista extends Usuario{
     }
 
     //Metodo para manejar objetos
-    public void agregarObjetoPropiedad(String objeto){
+    public void agregarObjetoPropiedad(Objetos objeto){
         this.objetosPropiedad.add(objeto);
     }
 
-    public boolean eliminarObjetoPropiedad(String objeto){
+    public boolean eliminarObjetoPropiedad(Objetos objeto){
         return this.objetosPropiedad.remove(objeto);
     }
 
@@ -56,7 +56,7 @@ public class Coleccionista extends Usuario{
         return new ArrayList<>(intereses);
     }
 
-    public ArrayList<String> getObjetosPropiedad(){
+    public ArrayList<Objetos> getObjetosPropiedad(){
         return new ArrayList<>(objetosPropiedad);
     }
 
@@ -69,6 +69,7 @@ public class Coleccionista extends Usuario{
     public void setDireccion(String direccion){
         this.direccion = direccion;
     }
+
     public void setPuntuacion(double puntuacion){
         this.puntuacion = puntuacion;
     }
@@ -92,8 +93,8 @@ public class Coleccionista extends Usuario{
         if (objetosPropiedad.isEmpty()) {
             resultado += "Ninguno";
         } else {
-            for (String objeto : objetosPropiedad) {
-                resultado += "\n  - " + objeto;
+            for (Objetos objeto : objetosPropiedad) {
+                resultado += "\n  - " + objeto.getNombre();
             }
         }
         return resultado;
