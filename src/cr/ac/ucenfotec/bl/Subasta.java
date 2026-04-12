@@ -22,6 +22,7 @@ public class Subasta {
         this.fechaCierre = null;
         this.estado = "";
         this.oferta = new ArrayList<>();
+        this.objetos = new ArrayList<>();
     }
 
     public Subasta(Usuario creador, double precioMinimo,
@@ -33,6 +34,7 @@ public class Subasta {
         this.fechaCierre = fechaCierre;
         this.estado = estado;
         this.oferta = new ArrayList<>();
+        this.objetos = new ArrayList<>();
     }
 
     // Metodo para obtener la puntuacion del creador
