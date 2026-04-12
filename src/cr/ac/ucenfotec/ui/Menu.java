@@ -26,7 +26,18 @@ public class Menu {
             System.out.println("8. Adjudicacion de subastas");
             System.out.println("0. Salir");
             System.out.print("Seleccione una opcion: ");
-            opcion = Integer.parseInt(br.readLine());
+
+            boolean valido = false;
+            opcion = -1;
+            while (!valido) {
+                try {
+                    opcion = Integer.parseInt(br.readLine());
+                    valido = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Ingrese un numero valido");
+                    System.out.print("Intente nuevamente: ");
+                }
+            }
 
             switch (opcion) {
                 case 1:
@@ -62,6 +73,7 @@ public class Menu {
             }
         } while (opcion != 0);
     }
+
     private void verificarModerador(ArrayList<Usuario> usuarios) throws IOException {
         boolean existeModerador = false;
         for (Usuario usuario : usuarios) {
@@ -78,38 +90,74 @@ public class Menu {
             registrarModerador(usuarios);
         }
     }
+
     private void registrarModerador(ArrayList<Usuario> usuarios) throws IOException {
-        System.out.println("\n--Registro del Moderador--");
-        System.out.print("Nombre completo: ");
-        String nombre = br.readLine();
-        System.out.print("Identificacion: ");
-        String id = br.readLine();
-        System.out.print("Fecha de nacimiento (dd/MM/yyyy): ");
-        LocalDate fechaNac = LocalDate.parse(br.readLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-        System.out.print("Contrasena: ");
-        String contrasena = br.readLine();
-        System.out.print("Correo electronico: ");
-        String correo = br.readLine();
-        Moderador moderador = new Moderador(nombre, id, fechaNac, contrasena, correo);
-        if (moderador.calcularEdad() < 18) {
-            System.out.println("El moderador debe ser mayor de 18 años");
-            return;
+        boolean registrado = false;
+        while (!registrado) {
+            System.out.println("\n--Registro del Moderador--");
+            System.out.print("Nombre completo: ");
+            String nombre = br.readLine();
+            System.out.print("Identificacion: ");
+            String id = br.readLine();
+            System.out.print("Fecha de nacimiento (dd/MM/yyyy): ");
+            LocalDate fechaNac = null;
+            boolean valido = false;
+            while (!valido) {
+                try {
+                    fechaNac = LocalDate.parse(br.readLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                    valido = true;
+                } catch (DateTimeParseException e) {
+                    System.out.println("Error: Formato de fecha invalido (dd/MM/yyyy)");
+                    System.out.print("Intente nuevamente: ");
+                }
+            }
+            System.out.print("Contrasena: ");
+            String contrasena = br.readLine();
+            System.out.print("Correo electronico: ");
+            String correo = br.readLine();
+            Moderador moderador = new Moderador(nombre, id, fechaNac, contrasena, correo);
+            if (moderador.calcularEdad() < 18) {
+                System.out.println("El moderador debe ser mayor de 18 años. Ingrese los datos nuevamente.");
+            } else {
+                usuarios.add(moderador);
+                System.out.println("\nModerador registrado exitosamente.");
+                registrado = true;
+            }
         }
-        usuarios.add(moderador);
-        System.out.println("\nModerador registrado exitosamente.");
     }
+
     private void registrarUsuario(ArrayList<Usuario> usuarios) throws IOException {
         System.out.println("\n--Registro de usuario--");
         System.out.println("1. Vendedor");
         System.out.println("2. Coleccionista");
         System.out.print("Seleccione tipo: ");
-        int tipo = Integer.parseInt(br.readLine());
+        int tipo = 0;
+        boolean valido = false;
+        while (!valido) {
+            try {
+                tipo = Integer.parseInt(br.readLine());
+                valido = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Ingrese un numero valido");
+                System.out.print("Intente nuevamente: ");
+            }
+        }
         System.out.print("Nombre completo: ");
         String nombre = br.readLine();
         System.out.print("Identificacion: ");
         String id = br.readLine();
         System.out.print("Fecha de nacimiento (dd/MM/yyyy): ");
-        LocalDate fechaNac = LocalDate.parse(br.readLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDate fechaNac = null;
+        valido = false;
+        while (!valido) {
+            try {
+                fechaNac = LocalDate.parse(br.readLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                valido = true;
+            } catch (DateTimeParseException e) {
+                System.out.println("Error: Formato de fecha invalido (dd/MM/yyyy)");
+                System.out.print("Intente nuevamente: ");
+            }
+        }
         System.out.print("Contrasena: ");
         String contrasena = br.readLine();
         System.out.print("Correo electronico: ");
@@ -121,7 +169,17 @@ public class Menu {
                 return;
             }
             System.out.print("Puntuacion: ");
-            double puntuacion = Double.parseDouble(br.readLine());
+            double puntuacion = 0;
+            valido = false;
+            while (!valido) {
+                try {
+                    puntuacion = Double.parseDouble(br.readLine());
+                    valido = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Ingrese un numero valido");
+                    System.out.print("Intente nuevamente: ");
+                }
+            }
             System.out.print("Direccion: ");
             String direccion = br.readLine();
             vendedor.setPuntuacion(puntuacion);
@@ -135,7 +193,17 @@ public class Menu {
                 return;
             }
             System.out.print("Puntuacion: ");
-            double puntuacion = Double.parseDouble(br.readLine());
+            double puntuacion = 0;
+            valido = false;
+            while (!valido) {
+                try {
+                    puntuacion = Double.parseDouble(br.readLine());
+                    valido = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Ingrese un numero valido");
+                    System.out.print("Intente nuevamente: ");
+                }
+            }
             System.out.print("Direccion: ");
             String direccion = br.readLine();
             coleccionista.setPuntuacion(puntuacion);
@@ -146,6 +214,7 @@ public class Menu {
             System.out.println("Tipo de usuario invalido");
         }
     }
+
     private void listarUsuarios(ArrayList<Usuario> usuarios) {
         if (usuarios.isEmpty()) {
             System.out.println("No hay usuarios registrados.");
@@ -156,6 +225,7 @@ public class Menu {
             System.out.println(usuarios.get(i).toString());
         }
     }
+
     private void crearSubasta(ArrayList<Usuario> usuarios, ArrayList<Subasta> subastas) throws IOException {
         if (usuarios.isEmpty()) {
             System.out.println("No hay usuarios registrados");
@@ -167,10 +237,21 @@ public class Menu {
             System.out.println((i + 1) + ". " + usuarios.get(i).getNombreCompleto() + " (" + usuarios.get(i).getTipoUsuario() + ")");
         }
         System.out.print("Opcion: ");
-        int indexCreador = Integer.parseInt(br.readLine()) - 1;
-        if (indexCreador < 0 || indexCreador >= usuarios.size()) {
-            System.out.println("Opcion invalida");
-            return;
+        int indexCreador = 0;
+        boolean valido = false;
+        while (!valido) {
+            try {
+                indexCreador = Integer.parseInt(br.readLine()) - 1;
+                if (indexCreador < 0 || indexCreador >= usuarios.size()) {
+                    System.out.println("Opcion invalida");
+                    System.out.print("Intente nuevamente: ");
+                } else {
+                    valido = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Ingrese un numero valido");
+                System.out.print("Intente nuevamente: ");
+            }
         }
         Usuario creador = usuarios.get(indexCreador);
         if (creador.getTipoUsuario().equals("MODERADOR")) {
@@ -178,11 +259,41 @@ public class Menu {
             return;
         }
         System.out.print("Precio minimo: ");
-        double precioMinimo = Double.parseDouble(br.readLine());
+        double precioMinimo = 0;
+        valido = false;
+        while (!valido) {
+            try {
+                precioMinimo = Double.parseDouble(br.readLine());
+                valido = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Ingrese un numero valido");
+                System.out.print("Intente nuevamente: ");
+            }
+        }
         System.out.print("Fecha de creacion (dd/MM/yyyy): ");
-        LocalDate fechaCreacion = LocalDate.parse(br.readLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDate fechaCreacion = null;
+        valido = false;
+        while (!valido) {
+            try {
+                fechaCreacion = LocalDate.parse(br.readLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                valido = true;
+            } catch (DateTimeParseException e) {
+                System.out.println("Error: Formato de fecha invalido (dd/MM/yyyy)");
+                System.out.print("Intente nuevamente: ");
+            }
+        }
         System.out.print("Fecha de cierre (dd/MM/yyyy): ");
-        LocalDate fechaCierre = LocalDate.parse(br.readLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        LocalDate fechaCierre = null;
+        valido = false;
+        while (!valido) {
+            try {
+                fechaCierre = LocalDate.parse(br.readLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                valido = true;
+            } catch (DateTimeParseException e) {
+                System.out.println("Error: Formato de fecha invalido (dd/MM/yyyy)");
+                System.out.print("Intente nuevamente: ");
+            }
+        }
         System.out.print("Estado: ");
         String estado = br.readLine();
         Subasta subasta = new Subasta(creador, precioMinimo, fechaCreacion, fechaCierre, estado);
@@ -200,21 +311,51 @@ public class Menu {
                 System.out.println((i + 1) + ". " + objetosPropiedad.get(i).getNombre());
             }
             System.out.print("Cuantos objetos desea agregar a la subasta: ");
-            int cantidad = Integer.parseInt(br.readLine());
+            int cantidad = 0;
+            valido = false;
+            while (!valido) {
+                try {
+                    cantidad = Integer.parseInt(br.readLine());
+                    valido = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Ingrese un numero valido");
+                    System.out.print("Intente nuevamente: ");
+                }
+            }
 
             for (int i = 0; i < cantidad; i++) {
                 System.out.print("Seleccione el objeto " + (i + 1) + ": ");
-                int indexObjeto = Integer.parseInt(br.readLine()) - 1;
-                if (indexObjeto >= 0 && indexObjeto < objetosPropiedad.size()) {
-                    subasta.agregarObjeto(objetosPropiedad.get(indexObjeto));
-                } else {
-                    System.out.println("Opcion invalida");
-                    i--;
+                int indexObjeto = 0;
+                valido = false;
+                while (!valido) {
+                    try {
+                        indexObjeto = Integer.parseInt(br.readLine()) - 1;
+                        if (indexObjeto >= 0 && indexObjeto < objetosPropiedad.size()) {
+                            subasta.agregarObjeto(objetosPropiedad.get(indexObjeto));
+                            valido = true;
+                        } else {
+                            System.out.println("Opcion invalida");
+                            System.out.print("Intente nuevamente: ");
+                        }
+                    } catch (NumberFormatException e) {
+                        System.out.println("Error: Ingrese un numero valido");
+                        System.out.print("Intente nuevamente: ");
+                    }
                 }
             }
         } else if (creador.getTipoUsuario().equals("VENDEDOR")) {
             System.out.print("Cuantos objetos desea agregar a la subasta: ");
-            int cantidad = Integer.parseInt(br.readLine());
+            int cantidad = 0;
+            valido = false;
+            while (!valido) {
+                try {
+                    cantidad = Integer.parseInt(br.readLine());
+                    valido = true;
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Ingrese un numero valido");
+                    System.out.print("Intente nuevamente: ");
+                }
+            }
 
             for (int i = 0; i < cantidad; i++) {
                 System.out.println("\n-- Objeto " + (i + 1) + " --");
@@ -225,16 +366,19 @@ public class Menu {
                 System.out.print("Estado (nuevo/usado/antiguo sin abrir): ");
                 String estadoObjeto = br.readLine();
                 System.out.print("Fecha de compra (dd/MM/yyyy): ");
-                LocalDate fechaCompra;
-                try {
-                    fechaCompra = LocalDate.parse(br.readLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-                } catch (DateTimeParseException e) {
-                    System.out.println("Error: Formato de fecha invalido. Use dd/MM/yyyy.");
-                    i--;
-                    continue;
+                LocalDate fechaCompra = null;
+                valido = false;
+                while (!valido) {
+                    try {
+                        fechaCompra = LocalDate.parse(br.readLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        Objetos objeto = new Objetos(nombre, descripcion, estadoObjeto, fechaCompra);
+                        subasta.agregarObjeto(objeto);
+                        valido = true;
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Error: Formato de fecha invalido (dd/MM/yyyy)");
+                        System.out.print("Intente nuevamente: ");
+                    }
                 }
-                Objetos objeto = new Objetos(nombre, descripcion, estadoObjeto, fechaCompra);
-                subasta.agregarObjeto(objeto);
             }
         }
 
@@ -281,11 +425,21 @@ public class Menu {
             }
         }
         System.out.print("Opcion: ");
-        int indexSubasta = Integer.parseInt(br.readLine()) - 1;
-
-        if (indexSubasta < 0 || indexSubasta >= subastas.size()) {
-            System.out.println("Opcion invalida");
-            return;
+        int indexSubasta = 0;
+        boolean valido = false;
+        while (!valido) {
+            try {
+                indexSubasta = Integer.parseInt(br.readLine()) - 1;
+                if (indexSubasta < 0 || indexSubasta >= subastas.size()) {
+                    System.out.println("Opcion invalida");
+                    System.out.print("Intente nuevamente: ");
+                } else {
+                    valido = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Ingrese un numero valido");
+                System.out.print("Intente nuevamente: ");
+            }
         }
 
         Subasta subasta = subastas.get(indexSubasta);
@@ -300,11 +454,21 @@ public class Menu {
             System.out.println((i + 1) + ". " + usuarios.get(i).getNombreCompleto() + " (" + usuarios.get(i).getTipoUsuario() + ")");
         }
         System.out.print("Opcion: ");
-        int indexOferente = Integer.parseInt(br.readLine()) - 1;
-
-        if (indexOferente < 0 || indexOferente >= usuarios.size()) {
-            System.out.println("Opcion invalida");
-            return;
+        int indexOferente = 0;
+        valido = false;
+        while (!valido) {
+            try {
+                indexOferente = Integer.parseInt(br.readLine()) - 1;
+                if (indexOferente < 0 || indexOferente >= usuarios.size()) {
+                    System.out.println("Opcion invalida");
+                    System.out.print("Intente nuevamente: ");
+                } else {
+                    valido = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Ingrese un numero valido");
+                System.out.print("Intente nuevamente: ");
+            }
         }
 
         Usuario oferente = usuarios.get(indexOferente);
@@ -320,7 +484,17 @@ public class Menu {
         }
 
         System.out.print("Precio ofertado: ");
-        double precio = Double.parseDouble(br.readLine());
+        double precio = 0;
+        valido = false;
+        while (!valido) {
+            try {
+                precio = Double.parseDouble(br.readLine());
+                valido = true;
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Ingrese un numero valido");
+                System.out.print("Intente nuevamente: ");
+            }
+        }
         Oferta oferta = new Oferta(oferente.getNombreCompleto(), oferente.getPuntuacion(), precio);
         subasta.agregarOferta(oferta);
         System.out.println("\nOferta registrada de manera exitosa");
@@ -397,10 +571,21 @@ public class Menu {
             }
         }
         System.out.print("Opcion: ");
-        int indexSubasta = Integer.parseInt(br.readLine()) - 1;
-        if (indexSubasta < 0 || indexSubasta >= subastas.size()) {
-            System.out.println("Opcion invalida");
-            return;
+        int indexSubasta = 0;
+        boolean valido = false;
+        while (!valido) {
+            try {
+                indexSubasta = Integer.parseInt(br.readLine()) - 1;
+                if (indexSubasta < 0 || indexSubasta >= subastas.size()) {
+                    System.out.println("Opcion invalida");
+                    System.out.print("Intente nuevamente: ");
+                } else {
+                    valido = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Ingrese un numero valido");
+                System.out.print("Intente nuevamente: ");
+            }
         }
         Subasta subasta = subastas.get(indexSubasta);
         if (subasta.getEstado().startsWith("Adjudicada")) {
