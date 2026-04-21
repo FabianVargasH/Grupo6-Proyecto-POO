@@ -1,6 +1,10 @@
-package cr.ac.ucenfotec.ui;
+package cr.ac.ucenfotec;
 import java.util.ArrayList;
-import cr.ac.ucenfotec.bl.*;
+
+import cr.ac.ucenfotec.bl.entities.OrdenAdjudicacion;
+import cr.ac.ucenfotec.bl.entities.Subasta;
+import cr.ac.ucenfotec.bl.entities.Usuario;
+import cr.ac.ucenfotec.ui.Menu;
 
 public class Main {
     public static void main(String[] args) throws Exception {

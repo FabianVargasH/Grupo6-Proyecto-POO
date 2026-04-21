@@ -1,8 +1,9 @@
-package cr.ac.ucenfotec.bl;
+package cr.ac.ucenfotec.bl.entities;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-public class Coleccionista extends Usuario{
+public class Coleccionista extends Usuario {
     private double puntuacion;
     private String direccion;
     private ArrayList<String> intereses;

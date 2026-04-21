@@ -1,6 +1,7 @@
-package cr.ac.ucenfotec.bl;
+package cr.ac.ucenfotec.bl.entities;
+
 import java.time.LocalDate;
-public class Moderador extends Usuario{
+public class Moderador extends Usuario {
 
     //Constructor por defecto
     public Moderador(){

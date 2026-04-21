@@ -1,5 +1,6 @@
 package cr.ac.ucenfotec.ui;
-import cr.ac.ucenfotec.bl.*;
+import cr.ac.ucenfotec.bl.entities.*;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
