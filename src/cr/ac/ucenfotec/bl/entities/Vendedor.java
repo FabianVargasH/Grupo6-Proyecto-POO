@@ -1,7 +1,8 @@
-package cr.ac.ucenfotec.bl;
+package cr.ac.ucenfotec.bl.entities;
+
 import java.time.LocalDate;
 
-public class Vendedor extends Usuario{
+public class Vendedor extends Usuario {
     private double puntuacion;
     private String direccion;
     
