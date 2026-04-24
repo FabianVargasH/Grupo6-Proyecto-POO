@@ -17,7 +17,9 @@ public class Controlador {
     public static BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
+    // ─────────────────────────────────────────────
     //  USUARIOS
+    // ─────────────────────────────────────────────
 
     public static void registrarModerador() throws IOException, SQLException, ClassNotFoundException {
         System.out.println("\n--- Registro del Moderador ---");
@@ -74,7 +76,9 @@ public class Controlador {
         GestorModerador.listarModerador();
     }
 
+    // ─────────────────────────────────────────────
     //  SUBASTAS
+    // ─────────────────────────────────────────────
 
     public static void crearSubasta(ArrayList<Usuario> usuarios)
             throws IOException, SQLException, ClassNotFoundException {
@@ -134,7 +138,9 @@ public class Controlador {
         for (Subasta s : subastas) System.out.println(s.toString());
     }
 
+    // ─────────────────────────────────────────────
     //  OFERTAS
+    // ─────────────────────────────────────────────
 
     public static void crearOferta(ArrayList<Usuario> usuarios, ArrayList<Subasta> subastas)
             throws IOException, SQLException, ClassNotFoundException {
@@ -181,7 +187,9 @@ public class Controlador {
         if (!hayOfertas) System.out.println("No hay ofertas registradas.");
     }
 
+    // ─────────────────────────────────────────────
     //  OBJETOS Y ADJUDICACIÓN
+    // ─────────────────────────────────────────────
 
     public static void listarObjetosEnPlataforma(ArrayList<Subasta> subastas) {
         boolean hayObjetos = false;
@@ -222,7 +230,9 @@ public class Controlador {
                 subastas.get(idx).getId(), subastas.get(idx), usuarios));
     }
 
-    //  MÉTODOS AUXILIARES
+    // ─────────────────────────────────────────────
+    //  MÉTODOS AUXILIARES DE LECTURA
+    // ─────────────────────────────────────────────
 
     private static String[] leerDatosUsuario() throws IOException {
         System.out.print("Nombre completo: "); String nombre = entrada.readLine();
