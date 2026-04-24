@@ -16,6 +16,7 @@ public class GestorOrdenAdjudicacion {
             throws SQLException, IOException, ClassNotFoundException {
         if (subasta.getEstado().startsWith("Adjudicada"))
             return "Esta subasta ya fue adjudicada.";
+
         ArrayList<Oferta> ofertas = subasta.getOferta();
         if (ofertas.isEmpty())
             return "No hay ofertas en esta subasta. No se puede adjudicar.";
@@ -23,17 +24,24 @@ public class GestorOrdenAdjudicacion {
         // Determinar mejor oferta
         Oferta mejorOferta = ofertas.get(0);
         for (Oferta oferta : ofertas) {
-            if (oferta.getPrecioOfertado() > mejorOferta.getPrecioOfertado()) mejorOferta = oferta;
+            if (oferta.getPrecioOfertado() > mejorOferta.getPrecioOfertado())
+                mejorOferta = oferta;
         }
 
-        // Buscar el ID del ganador
-        String ganadorId = buscarIdPorNombre(usuarios, mejorOferta.getNombreOferente());
+        // Buscar ID del ganador en la lista de usuarios
+        String ganadorId = null;
+        for (Usuario u : usuarios) {
+            if (u.getNombreCompleto().equals(mejorOferta.getNombreOferente())) {
+                ganadorId = u.getIdentificacion();
+                break;
+            }
+        }
         if (ganadorId == null) return "No se encontró el usuario ganador.";
 
-        // Buscar IDs de objetos en BD
-        ArrayList<Integer> idsObjetos = buscarIdsObjetos(idSubasta);
+        // Obtener IDs de los objetos de la subasta
+        ArrayList<Integer> idsObjetos = DAOObjeto.seleccionarIdsPorSubasta(idSubasta);
 
-        // Crear orden
+        // Crear y persistir la orden
         OrdenAdjudicacion orden = new OrdenAdjudicacion(
                 mejorOferta.getNombreOferente(), LocalDate.now(), mejorOferta.getPrecioOfertado());
         for (Objetos obj : subasta.getObjetos()) orden.agregarObjetoAdjudicado(obj);
@@ -46,25 +54,5 @@ public class GestorOrdenAdjudicacion {
 
     public static void listarOrdenes() throws SQLException, IOException, ClassNotFoundException {
         DAOOrdenAdjudicacion.leerOrdenes();
-    }
-
-    private static String buscarIdPorNombre(ArrayList<Usuario> usuarios, String nombre) {
-        for (Usuario u : usuarios) {
-            if (u.getNombreCompleto().equals(nombre)) return u.getIdentificacion();
-        }
-        return null;
-    }
-
-    private static ArrayList<Integer> buscarIdsObjetos(int idSubasta)
-            throws SQLException, IOException, ClassNotFoundException {
-        ArrayList<Integer> ids = new ArrayList<>();
-        ArrayList<Objetos> objetos = DAOObjeto.seleccionarObjetosPorSubasta(idSubasta);
-        // Obtener IDs reales de la BD via consulta directa
-        cr.ac.ucenfotec.dl.Conector.getConexion();
-        String query = "SELECT objeto_id FROM t_subasta_objeto WHERE subasta_id = ?;";
-        java.sql.ResultSet rs = cr.ac.ucenfotec.dl.Conector.getConexion()
-                .ejecutarQuery(query, String.valueOf(idSubasta));
-        while (rs.next()) ids.add(rs.getInt("objeto_id"));
-        return ids;
     }
 }

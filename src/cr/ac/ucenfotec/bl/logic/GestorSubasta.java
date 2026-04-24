@@ -12,18 +12,15 @@ import java.util.ArrayList;
 public class GestorSubasta {
 
     public static String crearSubasta(Usuario creador, double precioMinimo, LocalDate fechaCreacion,
-                                      LocalDate fechaCierre, String estado,
-                                      ArrayList<Objetos> objetos, String propietarioId)
+                                      LocalDate fechaCierre, String estado, ArrayList<Objetos> objetos)
             throws SQLException, IOException, ClassNotFoundException {
-        if (creador.getTipoUsuario().equals("MODERADOR"))
-            return "El moderador no puede crear subastas.";
         if (objetos == null || objetos.isEmpty())
             return "No se puede crear una subasta sin objetos.";
 
         // Insertar objetos en BD y recoger sus IDs
         ArrayList<Integer> idsObjetos = new ArrayList<>();
         for (Objetos obj : objetos) {
-            int idObjeto = DAOObjeto.insertarObjeto(obj, propietarioId);
+            int idObjeto = DAOObjeto.insertarObjeto(obj, creador.getIdentificacion());
             idsObjetos.add(idObjeto);
         }
 

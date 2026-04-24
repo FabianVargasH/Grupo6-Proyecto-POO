@@ -26,7 +26,7 @@ public class Controlador {
         String[] datos = leerDatosUsuario();
         LocalDate fechaNac = leerFechaDesdeString(datos[2]);
         if (fechaNac == null) { System.out.println("Fecha invalida."); return; }
-        System.out.println(GestorUsuario.registrarModerador(datos[0], datos[1], fechaNac, datos[3], datos[4]));
+        System.out.println(GestorModerador.registrarModerador(datos[0], datos[1], fechaNac, datos[3], datos[4]));
     }
 
     public static void registrarUsuario() throws IOException, SQLException, ClassNotFoundException {
@@ -44,23 +44,20 @@ public class Controlador {
         String direccion = entrada.readLine();
 
         if (tipo == 1) {
-            System.out.println(GestorUsuario.registrarVendedor(
+            System.out.println(GestorVendedor.registrarVendedor(
                     datos[0], datos[1], fechaNac, datos[3], datos[4], puntuacion, direccion));
         } else if (tipo == 2) {
-            String resultado = GestorUsuario.registrarColeccionista(
+            String resultado = GestorColeccionista.registrarColeccionista(
                     datos[0], datos[1], fechaNac, datos[3], datos[4], puntuacion, direccion);
             System.out.println(resultado);
-            // Si se registró correctamente, preguntar por intereses
             if (resultado.contains("adecuadamente")) {
                 System.out.print("Desea agregar intereses? (s/n): ");
-                String respuesta = entrada.readLine();
-                if (respuesta.equalsIgnoreCase("s")) {
+                if (entrada.readLine().equalsIgnoreCase("s")) {
                     System.out.print("Cuantos intereses desea agregar: ");
                     int cantidad = leerEntero();
                     for (int i = 0; i < cantidad; i++) {
                         System.out.print("Interes " + (i + 1) + ": ");
-                        String interes = entrada.readLine();
-                        System.out.println(GestorUsuario.agregarInteres(datos[1], interes));
+                        System.out.println(GestorColeccionista.agregarInteres(datos[1], entrada.readLine()));
                     }
                 }
             }
@@ -71,14 +68,20 @@ public class Controlador {
 
     public static void listarUsuarios() throws SQLException, IOException, ClassNotFoundException {
         System.out.println("\n--- Listado de usuarios ---");
-        GestorUsuario.listarUsuarios();
+        System.out.println("\n-- Vendedores --");
+        GestorVendedor.listarVendedores();
+        System.out.println("\n-- Coleccionistas --");
+        GestorColeccionista.listarColeccionistas();
+        System.out.println("\n-- Moderador --");
+        GestorModerador.listarModerador();
     }
 
     // ─────────────────────────────────────────────
     //  SUBASTAS
     // ─────────────────────────────────────────────
 
-    public static void crearSubasta(ArrayList<Usuario> usuarios) throws IOException, SQLException, ClassNotFoundException {
+    public static void crearSubasta(ArrayList<Usuario> usuarios)
+            throws IOException, SQLException, ClassNotFoundException {
         if (usuarios.isEmpty()) { System.out.println("No hay usuarios registrados."); return; }
         System.out.println("\n--- Creacion de subasta ---");
         System.out.println("Seleccione el creador:");
@@ -103,7 +106,7 @@ public class Controlador {
         if (creador.getTipoUsuario().equals("COLECCIONISTA")) {
             Coleccionista col = (Coleccionista) creador;
             ArrayList<Objetos> propios = col.getObjetosPropiedad();
-            if (propios.isEmpty()) { System.out.println("El coleccionista no tiene objetos."); return; }
+            if (propios.isEmpty()) { System.out.println("El coleccionista no tiene objetos registrados."); return; }
             System.out.println("\nObjetos disponibles:");
             for (int i = 0; i < propios.size(); i++)
                 System.out.println((i + 1) + ". " + propios.get(i).getNombre());
@@ -126,8 +129,7 @@ public class Controlador {
                 objetos.add(new Objetos(nombre, descripcion, estadoObj, fechaCompra));
             }
         }
-        System.out.println(GestorSubasta.crearSubasta(
-                creador, precioMinimo, fechaCreacion, fechaCierre, estado, objetos, creador.getIdentificacion()));
+        System.out.println(GestorSubasta.crearSubasta(creador, precioMinimo, fechaCreacion, fechaCierre, estado, objetos));
     }
 
     public static void listarSubastas(ArrayList<Subasta> subastas) {
@@ -166,7 +168,6 @@ public class Controlador {
 
         System.out.print("Precio ofertado: ");
         double precio = leerDecimal();
-        // Las validaciones las manejan los triggers de la BD
         System.out.println(GestorOferta.registrarOferta(subasta.getId(), oferente.getIdentificacion(), precio));
     }
 
