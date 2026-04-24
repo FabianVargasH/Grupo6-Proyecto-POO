@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class GestorOferta {
- // Validaciones
 
     public static String registrarOferta(int idSubasta, String oferenteId, double precioOfertado)
             throws SQLException, IOException, ClassNotFoundException {
