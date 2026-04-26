@@ -1,6 +1,5 @@
 package cr.ac.ucenfotec.ui;
 
-import cr.ac.ucenfotec.bl.entities.*;
 import cr.ac.ucenfotec.bl.logic.*;
 import cr.ac.ucenfotec.tl.Controlador;
 
@@ -8,7 +7,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class Menu {
 
@@ -31,20 +29,37 @@ public class Menu {
             System.out.print("Seleccione una opcion: ");
             opcion = leerEntero();
 
-            ArrayList<Usuario> usuarios = obtenerTodosUsuarios();
-            ArrayList<Subasta> subastas = GestorSubasta.obtenerSubastas(usuarios);
-
             switch (opcion) {
-                case 1: Controlador.registrarUsuario(); break;
-                case 2: Controlador.listarUsuarios(); break;
-                case 3: Controlador.crearSubasta(usuarios); break;
-                case 4: Controlador.listarSubastas(subastas); break;
-                case 5: Controlador.crearOferta(usuarios, subastas); break;
-                case 6: Controlador.listarOfertas(subastas); break;
-                case 7: Controlador.listarObjetosEnPlataforma(subastas); break;
-                case 8: Controlador.adjudicarSubasta(subastas, usuarios); break;
-                case 0: System.out.println("Saliendo del menu..."); break;
-                default: System.out.println("Opcion invalida."); break;
+                case 1:
+                    Controlador.registrarUsuario();
+                    break;
+                case 2:
+                    Controlador.listarUsuarios();
+                    break;
+                case 3:
+                    Controlador.crearSubasta();
+                    break;
+                case 4:
+                    Controlador.listarSubastas();
+                    break;
+                case 5:
+                    Controlador.crearOferta();
+                    break;
+                case 6:
+                    Controlador.listarOfertas();
+                    break;
+                case 7:
+                    Controlador.listarObjetosEnPlataforma();
+                    break;
+                case 8:
+                    Controlador.adjudicarSubasta();
+                    break;
+                case 0:
+                    System.out.println("Saliendo del menu...");
+                    break;
+                default:
+                    System.out.println("Opcion invalida.");
+                    break;
             }
         } while (opcion != 0);
     }
@@ -57,21 +72,13 @@ public class Menu {
         }
     }
 
-    // Combinacion de manera persistente. Con base en los gestores
-    private static ArrayList<Usuario> obtenerTodosUsuarios()
-            throws SQLException, IOException, ClassNotFoundException {
-        ArrayList<Usuario> todos = new ArrayList<>();
-        todos.addAll(GestorVendedor.obtenerVendedores());
-        todos.addAll(GestorColeccionista.obtenerColeccionistas());
-        Moderador mod = cr.ac.ucenfotec.bl.dao.DAOModerador.seleccionarModerador();
-        if (mod != null) todos.add(mod);
-        return todos;
-    }
-
     private static int leerEntero() throws IOException {
         while (true) {
-            try { return Integer.parseInt(entrada.readLine()); }
-            catch (NumberFormatException e) { System.out.print("Error: Ingrese un numero valido: "); }
+            try {
+                return Integer.parseInt(entrada.readLine());
+            } catch (NumberFormatException e) {
+                System.out.print("Error: Ingrese un numero valido: ");
+            }
         }
     }
 }

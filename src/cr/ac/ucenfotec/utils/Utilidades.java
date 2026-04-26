@@ -6,7 +6,7 @@ import java.util.Properties;
 
 public class Utilidades {
 
-    public static String[] getProperties() throws IOException, IOException {
+    public static String[] getProperties() throws IOException {
         String[] propiedades = new String[5];
         Properties lectura = new Properties();
         InputStream stream = Utilidades.class.getClassLoader()

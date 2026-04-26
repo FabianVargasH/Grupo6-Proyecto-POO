@@ -13,249 +13,288 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 
 public class Controlador {
-
     public static BufferedReader entrada = new BufferedReader(new InputStreamReader(System.in));
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    //  USUARIOS
-
+    //Metodo para registrar el tipo usuario Moderador
     public static void registrarModerador() throws IOException, SQLException, ClassNotFoundException {
-        System.out.println("\n--- Registro del Moderador ---");
-        String[] datos = leerDatosUsuario();
-        LocalDate fechaNac = leerFechaDesdeString(datos[2]);
-        if (fechaNac == null) { System.out.println("Fecha invalida."); return; }
-        System.out.println(GestorModerador.registrarModerador(datos[0], datos[1], fechaNac, datos[3], datos[4]));
+        System.out.println("\n-- Registro del Moderador --");
+        System.out.print("Nombre completo: ");
+        String nombre = entrada.readLine();
+        System.out.print("Identificacion: ");
+        String id = entrada.readLine();
+        System.out.print("Fecha de nacimiento (dd/MM/yyyy): ");
+        LocalDate fechaNac = null;
+        try {
+            fechaNac = LocalDate.parse(entrada.readLine(), FORMATO_FECHA);
+        } catch (DateTimeParseException e) {
+            System.out.println("Formato de fecha incorrecto.");
+            return;
+        }
+        System.out.print("Contrasena: ");
+        String contrasena = entrada.readLine();
+        System.out.print("Correo electronico: ");
+        String correo = entrada.readLine();
+
+        System.out.println(GestorModerador.registrarModerador(nombre, id, fechaNac, contrasena, correo));
     }
 
-    public static void registrarUsuario() throws IOException, SQLException, ClassNotFoundException {
-        System.out.println("\n--- Registro de usuario ---");
-        System.out.println("1. Vendedor");
-        System.out.println("2. Coleccionista");
-        System.out.print("Seleccione tipo: ");
-        int tipo = leerEntero();
-        String[] datos = leerDatosUsuario();
-        LocalDate fechaNac = leerFechaDesdeString(datos[2]);
-        if (fechaNac == null) { System.out.println("Fecha invalida."); return; }
+    //Metodo registrar vendedor
+    public static void registrarVendedor() throws IOException, SQLException, ClassNotFoundException {
+        System.out.println("\n-- Registro de Vendedor --");
+        System.out.print("Nombre completo: ");
+        String nombre = entrada.readLine();
+        System.out.print("Identificacion: ");
+        String id = entrada.readLine();
+        System.out.print("Fecha de nacimiento (dd/MM/yyyy): ");
+        LocalDate fechaNac = null;
+        try {
+            fechaNac = LocalDate.parse(entrada.readLine(), FORMATO_FECHA);
+        } catch (DateTimeParseException e) {
+            System.out.println("Formato de fecha incorrecto.");
+            return;
+        }
+        System.out.print("Contrasena: ");
+        String contrasena = entrada.readLine();
+        System.out.print("Correo electronico: ");
+        String correo = entrada.readLine();
         System.out.print("Puntuacion: ");
-        double puntuacion = leerDecimal();
+        double puntuacion = Double.parseDouble(entrada.readLine());
         System.out.print("Direccion: ");
         String direccion = entrada.readLine();
 
+        System.out.println(GestorVendedor.registrarVendedor(nombre, id, fechaNac, contrasena, correo, puntuacion, direccion));
+    }
+    //Metodo para registrar coleccionista
+    public static void registrarColeccionista() throws IOException, SQLException, ClassNotFoundException {
+        System.out.println("\n-- Registro de Coleccionista --");
+        System.out.print("Nombre completo: ");
+        String nombre = entrada.readLine();
+        System.out.print("Identificacion: ");
+        String id = entrada.readLine();
+        System.out.print("Fecha de nacimiento (dd/MM/yyyy): ");
+        LocalDate fechaNac = null;
+        try {
+            fechaNac = LocalDate.parse(entrada.readLine(), FORMATO_FECHA);
+        } catch (DateTimeParseException e) {
+            System.out.println("Formato de fecha incorrecto.");
+            return;
+        }
+        System.out.print("Contrasena: ");
+        String contrasena = entrada.readLine();
+        System.out.print("Correo electronico: ");
+        String correo = entrada.readLine();
+        System.out.print("Puntuacion: ");
+        double puntuacion = Double.parseDouble(entrada.readLine());
+        System.out.print("Direccion: ");
+        String direccion = entrada.readLine();
+
+        System.out.println(GestorColeccionista.registrarColeccionista(nombre, id, fechaNac, contrasena, correo, puntuacion, direccion));
+    }
+
+    //Metodo para imprmir el menu de registro de usuario
+    public static void registrarUsuario() throws IOException, SQLException, ClassNotFoundException {
+        System.out.println("\n-- Registro de Usuario --");
+        System.out.println("1. Vendedor");
+        System.out.println("2. Coleccionista");
+        System.out.print("Seleccione tipo: ");
+        int tipo = Integer.parseInt(entrada.readLine());
+
         if (tipo == 1) {
-            System.out.println(GestorVendedor.registrarVendedor(
-                    datos[0], datos[1], fechaNac, datos[3], datos[4], puntuacion, direccion));
+            registrarVendedor();
         } else if (tipo == 2) {
-            String resultado = GestorColeccionista.registrarColeccionista(
-                    datos[0], datos[1], fechaNac, datos[3], datos[4], puntuacion, direccion);
-            System.out.println(resultado);
-            if (resultado.contains("adecuadamente")) {
-                System.out.print("Desea agregar intereses? (s/n): ");
-                if (entrada.readLine().equalsIgnoreCase("s")) {
-                    System.out.print("Cuantos intereses desea agregar: ");
-                    int cantidad = leerEntero();
-                    for (int i = 0; i < cantidad; i++) {
-                        System.out.print("Interes " + (i + 1) + ": ");
-                        System.out.println(GestorColeccionista.agregarInteres(datos[1], entrada.readLine()));
-                    }
-                }
-            }
+            registrarColeccionista();
         } else {
             System.out.println("Tipo de usuario invalido.");
         }
     }
 
+    //Metodo para listar los usuarios registrados en la base de datos
     public static void listarUsuarios() throws SQLException, IOException, ClassNotFoundException {
-        System.out.println("\n--- Listado de usuarios ---");
-        System.out.println("\n-- Vendedores --");
+        System.out.println("\n-- Listado de Vendedores --");
         GestorVendedor.listarVendedores();
-        System.out.println("\n-- Coleccionistas --");
+        System.out.println("\n-- Listado de Coleccionistas --");
         GestorColeccionista.listarColeccionistas();
         System.out.println("\n-- Moderador --");
         GestorModerador.listarModerador();
     }
 
-    //  SUBASTAS
+    //Metodo para crear subasta
+    public static void crearSubasta() throws IOException, SQLException, ClassNotFoundException {
+        System.out.println("\n-- Creacion de Subasta --");
 
-    public static void crearSubasta(ArrayList<Usuario> usuarios)
-            throws IOException, SQLException, ClassNotFoundException {
-        if (usuarios.isEmpty()) { System.out.println("No hay usuarios registrados."); return; }
-        System.out.println("\n--- Creacion de subasta ---");
-        System.out.println("Seleccione el creador:");
-        for (int i = 0; i < usuarios.size(); i++)
-            System.out.println((i + 1) + ". " + usuarios.get(i).getNombreCompleto() +
-                    " (" + usuarios.get(i).getTipoUsuario() + ")");
-        System.out.print("Opcion: ");
-        int index = leerEntero() - 1;
-        if (index < 0 || index >= usuarios.size()) { System.out.println("Opcion invalida."); return; }
-        Usuario creador = usuarios.get(index);
+        System.out.println("\n-- Vendedores disponibles --");
+        GestorVendedor.listarVendedores();
+        System.out.println("\n-- Coleccionistas disponibles --");
+        GestorColeccionista.listarColeccionistas();
+
+        System.out.print("\nIdentificacion del creador: ");
+        String idCreador = entrada.readLine().trim();
+
+        Vendedor vendedor = GestorVendedor.buscarVendedor(idCreador);
+        Coleccionista coleccionista = null;
+        Usuario creador = null;
+
+        if (vendedor != null) {
+            creador = vendedor;
+        } else {
+            coleccionista = GestorColeccionista.buscarColeccionista(idCreador);
+            creador = coleccionista;
+        }
+
+        if (creador == null) {
+            System.out.println("No se encontro un usuario con esa identificacion.");
+            return;
+        }
 
         System.out.print("Precio minimo: ");
-        double precioMinimo = leerDecimal();
+        double precioMinimo = Double.parseDouble(entrada.readLine());
+
         System.out.print("Fecha de creacion (dd/MM/yyyy): ");
-        LocalDate fechaCreacion = leerFecha();
+        LocalDate fechaCreacion = null;
+        try {
+            fechaCreacion = LocalDate.parse(entrada.readLine(), FORMATO_FECHA);
+        } catch (DateTimeParseException e) {
+            System.out.println("Formato de fecha incorrecto.");
+            return;
+        }
+
         System.out.print("Fecha de cierre (dd/MM/yyyy): ");
-        LocalDate fechaCierre = leerFecha();
+        LocalDate fechaCierre = null;
+        try {
+            fechaCierre = LocalDate.parse(entrada.readLine(), FORMATO_FECHA);
+        } catch (DateTimeParseException e) {
+            System.out.println("Formato de fecha incorrecto.");
+            return;
+        }
+
         System.out.print("Estado: ");
         String estado = entrada.readLine();
+        System.out.print("Cuantos objetos desea agregar a la subasta: ");
+        int cantidad = Integer.parseInt(entrada.readLine());
 
         ArrayList<Objetos> objetos = new ArrayList<>();
-        if (creador.getTipoUsuario().equals("COLECCIONISTA")) {
-            Coleccionista col = (Coleccionista) creador;
-            ArrayList<Objetos> propios = col.getObjetosPropiedad();
-            if (propios.isEmpty()) { System.out.println("El coleccionista no tiene objetos registrados."); return; }
-            System.out.println("\nObjetos disponibles:");
-            for (int i = 0; i < propios.size(); i++)
-                System.out.println((i + 1) + ". " + propios.get(i).getNombre());
-            System.out.print("Cuantos objetos desea agregar: ");
-            int cantidad = leerEntero();
-            for (int i = 0; i < cantidad; i++) {
-                System.out.print("Seleccione objeto " + (i + 1) + ": ");
-                int idx = leerEntero() - 1;
-                if (idx >= 0 && idx < propios.size()) objetos.add(propios.get(idx));
+        for (int i = 0; i < cantidad; i++) {
+            System.out.println("\n-- Objeto " + (i + 1) + " --");
+            System.out.print("Nombre: ");
+            String nombre = entrada.readLine();
+            System.out.print("Descripcion: ");
+            String descripcion = entrada.readLine();
+            System.out.print("Estado (nuevo/usado/antiguo sin abrir): ");
+            String estadoObj = entrada.readLine();
+            System.out.print("Fecha de compra (dd/MM/yyyy): ");
+            LocalDate fechaCompra = null;
+            try {
+                fechaCompra = LocalDate.parse(entrada.readLine(), FORMATO_FECHA);
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato de fecha incorrecto.");
+                return;
             }
-        } else {
-            System.out.print("Cuantos objetos desea agregar: ");
-            int cantidad = leerEntero();
-            for (int i = 0; i < cantidad; i++) {
-                System.out.println("\n-- Objeto " + (i + 1) + " --");
-                System.out.print("Nombre: "); String nombre = entrada.readLine();
-                System.out.print("Descripcion: "); String descripcion = entrada.readLine();
-                System.out.print("Estado (nuevo/usado/antiguo sin abrir): "); String estadoObj = entrada.readLine();
-                System.out.print("Fecha de compra (dd/MM/yyyy): "); LocalDate fechaCompra = leerFecha();
-                objetos.add(new Objetos(nombre, descripcion, estadoObj, fechaCompra));
-            }
+            objetos.add(new Objetos(nombre, descripcion, estadoObj, fechaCompra));
         }
+
         System.out.println(GestorSubasta.crearSubasta(creador, precioMinimo, fechaCreacion, fechaCierre, estado, objetos));
     }
 
-    public static void listarSubastas(ArrayList<Subasta> subastas) {
-        if (subastas.isEmpty()) { System.out.println("No hay subastas registradas."); return; }
-        System.out.println("\n--- Listado de subastas ---");
-        for (Subasta s : subastas) System.out.println(s.toString());
+    //Metodo para listar todas las subastas creadas
+    public static void listarSubastas() throws SQLException, IOException, ClassNotFoundException {
+        System.out.println("\n-- Listado de Subastas --");
+        GestorSubasta.listarSubastas();
     }
 
-    //  OFERTAS
+    //Metodo para crear una oferta a una subasta
+    public static void crearOferta() throws IOException, SQLException, ClassNotFoundException {
+        boolean ofertaValida = false;
 
-    public static void crearOferta(ArrayList<Usuario> usuarios, ArrayList<Subasta> subastas)
-            throws IOException, SQLException, ClassNotFoundException {
-        if (subastas.isEmpty() || usuarios.isEmpty()) {
-            System.out.println("Debe haber subastas y usuarios registrados."); return;
-        }
-        System.out.println("\n--- Creacion de oferta ---");
-        System.out.println("Seleccione la subasta:");
-        for (int i = 0; i < subastas.size(); i++)
-            System.out.println((i + 1) + ". Creador: " + subastas.get(i).getCreador().getNombreCompleto() +
-                    " | Estado: " + subastas.get(i).getEstado());
-        System.out.print("Opcion: ");
-        int idxSubasta = leerEntero() - 1;
-        if (idxSubasta < 0 || idxSubasta >= subastas.size()) { System.out.println("Opcion invalida."); return; }
-        Subasta subasta = subastas.get(idxSubasta);
+        while (!ofertaValida) {
+            System.out.println("\n-- Creacion de Oferta --");
 
-        System.out.println("Seleccione el oferente:");
-        for (int i = 0; i < usuarios.size(); i++)
-            System.out.println((i + 1) + ". " + usuarios.get(i).getNombreCompleto() +
-                    " (" + usuarios.get(i).getTipoUsuario() + ")");
-        System.out.print("Opcion: ");
-        int idxOferente = leerEntero() - 1;
-        if (idxOferente < 0 || idxOferente >= usuarios.size()) { System.out.println("Opcion invalida."); return; }
-        Usuario oferente = usuarios.get(idxOferente);
+            System.out.print("ID de la subasta: ");
+            int idSubasta = Integer.parseInt(entrada.readLine());
 
-        System.out.print("Precio ofertado: ");
-        double precio = leerDecimal();
-        System.out.println(GestorOferta.registrarOferta(subasta.getId(), oferente.getIdentificacion(), precio));
-    }
+            System.out.print("Identificacion del oferente: ");
+            String idOferente = entrada.readLine();
 
-    public static void listarOfertas(ArrayList<Subasta> subastas) {
-        boolean hayOfertas = false;
-        System.out.println("\n--- Listado de ofertas ---");
-        for (int i = 0; i < subastas.size(); i++) {
-            ArrayList<Oferta> ofertas = subastas.get(i).getOferta();
-            if (!ofertas.isEmpty()) {
-                hayOfertas = true;
-                System.out.println("\nSubasta " + (i + 1) + " | Creador: " +
-                        subastas.get(i).getCreador().getNombreCompleto() +
-                        " | Estado: " + subastas.get(i).getEstado());
-                for (Oferta o : ofertas) System.out.println(o.toString());
-            }
-        }
-        if (!hayOfertas) System.out.println("No hay ofertas registradas.");
-    }
+            System.out.print("Precio ofertado: ");
+            double precio = Double.parseDouble(entrada.readLine());
 
-    //  OBJETOS Y ADJUDICACIÓN
+            try {
+                String resultado = GestorOferta.registrarOferta(idSubasta, idOferente, precio);
+                System.out.println(resultado);
 
-    public static void listarObjetosEnPlataforma(ArrayList<Subasta> subastas) {
-        boolean hayObjetos = false;
-        System.out.println("\n--- Objetos ofrecidos en la plataforma ---");
-        for (Subasta subasta : subastas) {
-            if (subasta.getEstado().startsWith("Adjudicada")) {
-                System.out.println("\n[" + subasta.getEstado() + "]");
-                System.out.println("Creador: " + subasta.getCreador().getNombreCompleto() +
-                        " (" + subasta.getCreador().getTipoUsuario() + ")");
-                hayObjetos = true;
-            } else {
-                ArrayList<Objetos> objetos = subasta.getObjetos();
-                if (!objetos.isEmpty()) {
-                    hayObjetos = true;
-                    System.out.println("\nSubastado por: " + subasta.getCreador().getNombreCompleto() +
-                            " (" + subasta.getCreador().getTipoUsuario() + ")");
-                    for (Objetos obj : objetos)
-                        System.out.println("  - " + obj.getNombre() + " | Estado: " + obj.getEstado() +
-                                " | Precio minimo: " + subasta.getPrecioMinimo());
+                if (resultado.contains("exitosamente")) {
+                    ofertaValida = true;
+                } else {
+                    System.out.println("Error: " + resultado);
+                    System.out.print("¿Desea intentar con otro oferente? (s/n): ");
+                    String continuar = entrada.readLine();
+                    if (!continuar.equalsIgnoreCase("s")) {
+                        ofertaValida = true;
+                    }
+                }
+            } catch (SQLException e) {
+                String mensaje = e.getMessage();
+                if (mensaje.contains("vendedor no puede realizar ofertas")) {
+                    System.out.println("Error: Un vendedor no puede realizar ofertas.");
+                } else if (mensaje.contains("Solo los coleccionistas pueden realizar ofertas")) {
+                    System.out.println("Error: Solo los coleccionistas pueden realizar ofertas.");
+                } else if (mensaje.contains("Un coleccionista no puede ofertar en una subasta creada por el mismo")) {
+                    System.out.println("Error: Un coleccionista no puede ofertar en su propia subasta.");
+                } else {
+                    System.out.println("Error inesperado: " + mensaje);
+                }
+
+                System.out.print("¿Desea intentar con otro oferente? (s/n): ");
+                String continuar = entrada.readLine();
+                if (!continuar.equalsIgnoreCase("s")) {
+                    ofertaValida = true;
                 }
             }
         }
-        if (!hayObjetos) System.out.println("No hay objetos ofrecidos actualmente en la plataforma.");
     }
 
-    public static void adjudicarSubasta(ArrayList<Subasta> subastas, ArrayList<Usuario> usuarios)
-            throws IOException, SQLException, ClassNotFoundException {
-        if (subastas.isEmpty()) { System.out.println("No hay subastas registradas."); return; }
-        System.out.println("\n--- Adjudicacion de subasta ---");
-        System.out.println("Seleccione la subasta a adjudicar:");
-        for (int i = 0; i < subastas.size(); i++)
-            System.out.println((i + 1) + ". Creador: " + subastas.get(i).getCreador().getNombreCompleto() +
-                    " | Estado: " + subastas.get(i).getEstado());
-        System.out.print("Opcion: ");
-        int idx = leerEntero() - 1;
-        if (idx < 0 || idx >= subastas.size()) { System.out.println("Opcion invalida."); return; }
-        System.out.println(GestorOrdenAdjudicacion.adjudicarSubasta(
-                subastas.get(idx).getId(), subastas.get(idx), usuarios));
+    //Metodo para listar ofertas creadas para subastas especificas
+    public static void listarOfertas() throws IOException, SQLException, ClassNotFoundException {
+        System.out.println("\n-- Listado de Ofertas --");
+        System.out.print("ID de la subasta: ");
+        int idSubasta = Integer.parseInt(entrada.readLine());
+        GestorOferta.listarOfertasPorSubasta(idSubasta);
     }
 
-    //  MÉTODOS AUXILIARES
-
-    private static String[] leerDatosUsuario() throws IOException {
-        System.out.print("Nombre completo: "); String nombre = entrada.readLine();
-        System.out.print("Identificacion: "); String id = entrada.readLine();
-        System.out.print("Fecha de nacimiento (dd/MM/yyyy): "); String fecha = entrada.readLine();
-        System.out.print("Contrasena: "); String contrasena = entrada.readLine();
-        System.out.print("Correo electronico: "); String correo = entrada.readLine();
-        return new String[]{nombre, id, fecha, contrasena, correo};
+    // Metoodo para listar los objetos que estan en la plataforma (Los subastados)
+    public static void listarObjetosEnPlataforma() throws SQLException, IOException, ClassNotFoundException {
+        System.out.println("\n-- Objetos ofrecidos en la plataforma --");
+        GestorObjeto.listarObjetosEnPlataforma();
     }
 
-    private static LocalDate leerFechaDesdeString(String fecha) {
-        try { return LocalDate.parse(fecha, formatter); }
-        catch (DateTimeParseException e) { return null; }
-    }
+    // Metodo para poder adjudicar una subasta
+    public static void adjudicarSubasta() throws IOException, SQLException, ClassNotFoundException {
+        System.out.println("\n-- Adjudicacion de Subasta --");
+        System.out.print("ID de la subasta a adjudicar: ");
+        int idSubasta = Integer.parseInt(entrada.readLine());
 
-    private static int leerEntero() throws IOException {
-        while (true) {
-            try { return Integer.parseInt(entrada.readLine()); }
-            catch (NumberFormatException e) { System.out.print("Error: Ingrese un numero valido: "); }
+        double mejorPrecio = GestorOferta.obtenerMejorOferta(idSubasta);
+        if (mejorPrecio == 0) {
+            System.out.println("No hay ofertas en esta subasta. No se puede adjudicar.");
+            return;
         }
-    }
 
-    private static double leerDecimal() throws IOException {
-        while (true) {
-            try { return Double.parseDouble(entrada.readLine()); }
-            catch (NumberFormatException e) { System.out.print("Error: Ingrese un numero valido: "); }
+        String ganadorId = GestorOferta.obtenerGanadorSubasta(idSubasta);
+        if (ganadorId == null) {
+            System.out.println("No se encontro el ganador de la subasta.");
+            return;
         }
-    }
 
-    private static LocalDate leerFecha() throws IOException {
-        while (true) {
-            try { return LocalDate.parse(entrada.readLine(), formatter); }
-            catch (DateTimeParseException e) { System.out.print("Error: Formato invalido (dd/MM/yyyy): "); }
+        System.out.println("Mejor oferta: " + mejorPrecio + " por " + ganadorId);
+
+        System.out.print("¿Está seguro que desea adjudicar esta subasta? (S/N): ");
+        String confirmacion = entrada.readLine();
+
+        if (!confirmacion.equalsIgnoreCase("S")) {
+            System.out.println("Operación cancelada");
+            return;
         }
+
+        System.out.println(GestorOrdenAdjudicacion.adjudicarSubasta(idSubasta, ganadorId, mejorPrecio));
     }
 }
